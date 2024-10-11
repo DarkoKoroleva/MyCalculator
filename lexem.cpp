@@ -1,17 +1,7 @@
 #include <string>
-enum Type {
-    NUM,
-    OPR,
-    BRC
-};
+#include "lexem.h"
 
-struct Lexem {
-public:
-    Type type;
-    std::string value;
-
-    Lexem(Type type, std::string value) {
-        this->type = type;
-        this->value = value;
-    }
-};
+Lexem ::Lexem(Type type, std::string value) {
+    this->type = type;
+    this->value = value;
+}
