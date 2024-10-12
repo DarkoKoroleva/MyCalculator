@@ -1,20 +1,24 @@
 #include "pch.h" 
 #include "funcSin.h"
+#include <memory>
 
-class FuncSin : public Strategy {
-public:
-    double execute(const std::vector<double>& args) const override {
-        if (args.size() == 1) {
-            return sin(args[0]);
-        }
-        throw InvalidArgsException("command Sin takes 1 argument");
+double FuncSin::execute(const std::vector<double>& args) const {
+    if (args.size() == 1) {
+        return sin(args[0]);
     }
+    throw InvalidArgsException("command Sin takes 1 argument");
+}
 
-    const char* getName() override {
-        return "sin";
-    }
-};
+const char* FuncSin::getName() {
+	return "sin";
+}
 
-Strategy * create() {
-    return new FuncSin();
+extern "C" __declspec(dllexport) double executeF(const std::vector<double>&args) {
+	std::unique_ptr<Strategy> strategy = std::make_unique<FuncSin>();
+	return strategy->execute(args);
+}
+
+extern "C" __declspec(dllexport) const char* getNameF() {
+	std::unique_ptr<Strategy> strategy = std::make_unique<FuncSin>();
+	return strategy->getName();
 }
