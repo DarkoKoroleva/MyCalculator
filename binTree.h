@@ -6,6 +6,7 @@
 #include <map>
 #include "lexem.h"
 #include "plugins.h"
+#include "exitCodes.h"
 
 struct TreeNode {
     Lexem value;

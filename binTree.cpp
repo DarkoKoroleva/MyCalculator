@@ -16,7 +16,7 @@ std::unique_ptr<TreeNode> buildTree(std::vector<Lexem>& lexems) {
             }
             else {
                 std::cerr << "Invalid arithmetic expression";
-                exit(-1);
+                exit(INVALID_EXPR);
             }
 
             std::unique_ptr<TreeNode> left;
@@ -26,7 +26,7 @@ std::unique_ptr<TreeNode> buildTree(std::vector<Lexem>& lexems) {
             }
             else {
                 std::cerr << "Invalid arithmetic expression";
-                exit(-1);
+                exit(INVALID_EXPR);
             }
 
             std::unique_ptr<TreeNode> node = std::make_unique<TreeNode>(lexem);
@@ -43,7 +43,7 @@ std::unique_ptr<TreeNode> buildTree(std::vector<Lexem>& lexems) {
             }
             else {
                 std::cerr << "Invalid arithmetic expression";
-                exit(-1);
+                exit(INVALID_EXPR);
             }
 
             std::unique_ptr<TreeNode> node = std::make_unique<TreeNode>(lexem);
@@ -63,11 +63,11 @@ double evaluate(std::unique_ptr<TreeNode> top, std::map<std::string, FuncPtr> fu
         }
         catch (std::invalid_argument e) {
             std::cerr << e.what();
-            exit(0);
+            exit(INVALID_NUM);
         }
         catch (std::out_of_range e) {
             std::cerr << e.what();
-            exit(0);
+            exit(INVALID_NUM);
         }
     }
     else if (top.get()->value.type == Type::BIN_OPR) {

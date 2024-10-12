@@ -21,7 +21,7 @@ Type getType(char c) {
     else {
         std::string invalidChar{ c };
         std::cerr << "unrecognized char '" + invalidChar +"'";
-        exit(0);
+        exit(UNRECOGNIZED_CHAR);
     }
 }
 
@@ -58,7 +58,7 @@ std::vector<Lexem> parse(const std::string& s) {
             }
             else if (currType == Type::UNA_OPR && unaOper.find(lexem) == unaOper.end()) {
                 std::cerr << "No such operator '" + lexem + "'";
-                exit(0);
+                exit(INVALID_OPR);
             }
             parsed.emplace_back(currType, lexem);
             lexem.clear();
@@ -75,7 +75,7 @@ std::vector<Lexem> parse(const std::string& s) {
 
     if (counterBrc != 0) {
         std::cerr << "invalid arithmetic expression";
-        exit(0);
+        exit(INVALID_EXPR);
     }
     return parsed;
 }

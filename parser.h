@@ -7,6 +7,7 @@
 #include <stack>
 #include "lexem.h"
 #include "binTree.h"
+#include "exitCodes.h"
 
 const std::map<std::string, int> OPER = { {"-", 1}, {"+", 1}, {"*", 2}, {"/", 2}, {"^", 3}, {"sin", 4}, {"cos", 4}, {"ln", 4} };
 
