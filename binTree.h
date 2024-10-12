@@ -1,9 +1,11 @@
 #pragma once
-#include <stdio.h>
+#include <iostream>
 #include <string>
 #include <vector>
 #include <memory>
+#include <map>
 #include "lexem.h"
+#include "plugins.h"
 
 struct TreeNode {
     Lexem value;
@@ -15,3 +17,4 @@ struct TreeNode {
 
 
 std::unique_ptr<TreeNode> buildTree(std::vector<Lexem>& lexems);
+double evaluate(std::unique_ptr<TreeNode> top, std::map<std::string, FuncPtr> functions);
