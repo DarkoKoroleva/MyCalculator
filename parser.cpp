@@ -2,7 +2,7 @@
 
 Type getType(char c) {
     std::string num = "0123456789.";//make global?
-    std::string binOper = "+-*/";
+    std::string binOper = "+-*/^";
     std::string unaOper = "sin, cos, ln, !";
     std::string brc = "()";
 
@@ -19,14 +19,13 @@ Type getType(char c) {
         return Type::BRC;
     }
     else {
-        std::cerr << "unrecognized char" + c;
+        std::string invalidChar{ c };
+        std::cerr << "unrecognized char '" + invalidChar +"'";
         exit(0);
     }
 }
 
 std::vector<Lexem> parse(const std::string& s) {
-    std::set<std::string> operation = { "sin", "cos", "ln", "!", "+", "-", "*", "/" };
-    std::set<std::string> bin_oper = { "+", "-", "*", "/" };
     std::set<std::string> unaOper = { "sin", "cos", "ln", "!" };
     std::vector<Lexem> parsed;
     std::string lexem;
@@ -35,6 +34,8 @@ std::vector<Lexem> parse(const std::string& s) {
     for (int it = 0; it < s.size() - 1; it++) {
         if (s[it] == '(') {
             counterBrc++;
+            parsed.emplace_back(Type::BRC, "(");
+            continue;
         }
         else if (s[it] == ')') {
             counterBrc--;
@@ -42,21 +43,28 @@ std::vector<Lexem> parse(const std::string& s) {
                 std::cerr << "invalid arithmetic expression";
                 exit(0);
             }
+            parsed.emplace_back(Type::BRC, ")");
+            continue;
         }
+        Type currType = getType(s[it]);
 
-        if (getType(s[it]) == getType(s[it + 1])) {
+        if (currType == getType(s[it + 1])) {
             lexem += s[it];
         }
         else {
             lexem += s[it];
-            if (getType(s[it]) == Type::UNA_OPR && unaOper.find(lexem) == unaOper.end()) {
+            if (lexem == "-" && (it == 0 || s[it - 1] == '(')) { //unary minus
+                currType = Type::UNA_OPR;
+            }
+            else if (currType == Type::UNA_OPR && unaOper.find(lexem) == unaOper.end()) {
                 std::cerr << "No such operator '" + lexem + "'";
                 exit(0);
             }
-            parsed.emplace_back(getType(s[it]), lexem);
+            parsed.emplace_back(currType, lexem);
             lexem.clear();
         }
     }
+
     int it = s.size() - 1;
     if (s[it] == '(') counterBrc++;
     else if (s[it] == ')') counterBrc--;

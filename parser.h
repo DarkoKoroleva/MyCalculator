@@ -8,7 +8,7 @@
 #include "lexem.h"
 #include "binTree.h"
 
-const std::map<std::string, int> OPER = { {"-", 1}, {"+", 1}, {"*", 2}, {"/", 2}, {"^", 3}, {"sin", 4}, {"!", 4}, {"ln", 4} };
+const std::map<std::string, int> OPER = { {"-", 1}, {"+", 1}, {"*", 2}, {"/", 2}, {"^", 3}, {"sin", 4}, {"cos", 4}, {"ln", 4} };
 
 Type getType(char c);
 int getPriority(Lexem lex);
