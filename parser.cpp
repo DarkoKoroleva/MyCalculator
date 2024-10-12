@@ -3,7 +3,7 @@
 Type getType(char c) {
     std::string num = "0123456789.";//make global?
     std::string binOper = "+-*/^";
-    std::string unaOper = "sin, cos, ln, !";
+    std::string unaOper = "sin, cos, ln, !, sqrt, tg, ctg";
     std::string brc = "()";
 
     if (num.find(c) != std::string::npos) {
@@ -18,15 +18,13 @@ Type getType(char c) {
     else if (brc.find(c) != std::string::npos) {
         return Type::BRC;
     }
-    else {
-        std::string invalidChar{ c };
-        std::cerr << "unrecognized char '" + invalidChar +"'";
-        exit(UNRECOGNIZED_CHAR);
-    }
+
+    std::string invalidChar{ c };
+    throw std::runtime_error("unrecognized char '" + invalidChar + "'");
 }
 
 std::vector<Lexem> parse(const std::string& s) {
-    std::set<std::string> unaOper = { "sin", "cos", "ln", "!" };
+    std::set<std::string> unaOper = { "sin", "cos", "ln", "!", "tg", "ctg", "sqrt"};
     std::vector<Lexem> parsed;
     std::string lexem;
     int counterBrc = 0;
@@ -40,8 +38,7 @@ std::vector<Lexem> parse(const std::string& s) {
         else if (s[it] == ')') {
             counterBrc--;
             if (counterBrc < 0) {
-                std::cerr << "invalid arithmetic expression";
-                exit(0);
+                throw std::runtime_error("invalid arithmetic expression: check the sequence of brackets");
             }
             parsed.emplace_back(Type::BRC, ")");
             continue;
@@ -57,8 +54,7 @@ std::vector<Lexem> parse(const std::string& s) {
                 currType = Type::UNA_OPR;
             }
             else if (currType == Type::UNA_OPR && unaOper.find(lexem) == unaOper.end()) {
-                std::cerr << "No such operator '" + lexem + "'";
-                exit(INVALID_OPR);
+                throw std::runtime_error("No such operator '" + lexem + "'");
             }
             parsed.emplace_back(currType, lexem);
             lexem.clear();
@@ -74,8 +70,7 @@ std::vector<Lexem> parse(const std::string& s) {
     lexem.clear();
 
     if (counterBrc != 0) {
-        std::cerr << "invalid arithmetic expression";
-        exit(INVALID_EXPR);
+        throw std::runtime_error("invalid arithmetic expression: check the sequence of brackets");
     }
     return parsed;
 }
@@ -136,5 +131,3 @@ std::vector<Lexem> getPostfixNotation(const std::vector<Lexem>& parsed) {
     }
     return postfix;
 }
-
-

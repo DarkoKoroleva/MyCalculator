@@ -15,8 +15,7 @@ std::unique_ptr<TreeNode> buildTree(std::vector<Lexem>& lexems) {
                 stack.pop_back();
             }
             else {
-                std::cerr << "Invalid arithmetic expression";
-                exit(INVALID_EXPR);
+                throw std::runtime_error("Invalid arithmetic expression");
             }
 
             std::unique_ptr<TreeNode> left;
@@ -25,8 +24,7 @@ std::unique_ptr<TreeNode> buildTree(std::vector<Lexem>& lexems) {
                 stack.pop_back();
             }
             else {
-                std::cerr << "Invalid arithmetic expression";
-                exit(INVALID_EXPR);
+                throw std::runtime_error("Invalid arithmetic expression");
             }
 
             std::unique_ptr<TreeNode> node = std::make_unique<TreeNode>(lexem);
@@ -42,8 +40,7 @@ std::unique_ptr<TreeNode> buildTree(std::vector<Lexem>& lexems) {
                 stack.pop_back();
             }
             else {
-                std::cerr << "Invalid arithmetic expression";
-                exit(INVALID_EXPR);
+                throw std::runtime_error("Invalid arithmetic expression");
             }
 
             std::unique_ptr<TreeNode> node = std::make_unique<TreeNode>(lexem);
@@ -56,26 +53,28 @@ std::unique_ptr<TreeNode> buildTree(std::vector<Lexem>& lexems) {
     return std::move(stack.back());
 }
 
-double evaluate(std::unique_ptr<TreeNode> top, std::map<std::string, FuncPtr> functions) {
-    if (top.get()->value.type == Type::NUM) {
+double evaluate(const std::unique_ptr<TreeNode>& top, const std::map<std::string, FuncPtr>& functions) {
+    if (top->value.type == Type::NUM) {
         try {
-            return stod(top.get()->value.value);
+            return stod(top->value.value);
         }
         catch (std::invalid_argument e) {
-            std::cerr << e.what();
-            exit(INVALID_NUM);
+            throw std::runtime_error(e.what());
         }
         catch (std::out_of_range e) {
-            std::cerr << e.what();
-            exit(INVALID_NUM);
+            throw std::runtime_error(e.what());
         }
     }
-    else if (top.get()->value.type == Type::BIN_OPR) {
-        std::vector<double> args = { evaluate(std::move(top.get()->left), functions), evaluate(std::move(top.get()->right), functions) };
-        return functions[top.get()->value.value](args);
+    else if (top->value.type == Type::BIN_OPR) {
+        double left = evaluate(top->left, functions);
+        double right = evaluate(top->right, functions);
+        std::vector<double> args = { left, right};
+        return functions.at(top->value.value)(args);
     }
-    else if (top.get()->value.type == Type::UNA_OPR) {
-        std::vector<double> args = {evaluate(std::move(top.get()->right), functions) };
-        return functions[top.get()->value.value](args);
+    else if (top->value.type == Type::UNA_OPR) {
+        std::vector<double> args = {evaluate(top->right, functions) };
+        return functions.at(top->value.value)(args);
     }
+
+    throw std::runtime_error("Unknown node type");
 }

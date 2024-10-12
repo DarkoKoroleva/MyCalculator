@@ -6,7 +6,6 @@
 #include <map>
 #include "lexem.h"
 #include "plugins.h"
-#include "exitCodes.h"
 
 struct TreeNode {
     Lexem value;
@@ -18,4 +17,4 @@ struct TreeNode {
 
 
 std::unique_ptr<TreeNode> buildTree(std::vector<Lexem>& lexems);
-double evaluate(std::unique_ptr<TreeNode> top, std::map<std::string, FuncPtr> functions);
+double evaluate(const std::unique_ptr<TreeNode>& top, const std::map<std::string, FuncPtr>& functions);
