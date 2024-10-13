@@ -85,7 +85,12 @@ int getPriority(Lexem lex) {
         return 0;
     }
     else if (lex.type == Type::BIN_OPR || lex.type == Type::UNA_OPR) {
-        return OPER.at(lex.value);
+        try {
+            return OPER.at(lex.value);
+        } 
+        catch (std::out_of_range e) {
+            throw std::runtime_error("No such operator '" + lex.value +"'");
+        }
     }
 }
 
