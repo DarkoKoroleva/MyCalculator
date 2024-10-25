@@ -17,4 +17,4 @@ struct TreeNode {
 
 
 std::unique_ptr<TreeNode> buildTree(std::vector<Lexem>& lexems);
-double evaluate(const std::unique_ptr<TreeNode>& top, const std::map<std::string, FuncPtr>& functions);
+double evaluate(const std::unique_ptr<TreeNode> top, const std::map<std::string, FuncPtr>& functions);

@@ -5,7 +5,6 @@
 #include <set>
 #include <map>
 #include <stack>
-#include <filesystem>
 #include "lexem.h"
 #include "binTree.h"
 

@@ -36,7 +36,7 @@ int main() {
             std::vector<Lexem> postLexems = getPostfixNotation(lexems);
 
             std::unique_ptr<TreeNode> top = buildTree(postLexems);
-            double result = evaluate(top, functions);
+            double result = evaluate(std::move(top), functions);
 
             std::cout << result << std::endl;
         }

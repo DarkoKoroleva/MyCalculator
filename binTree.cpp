@@ -53,7 +53,7 @@ std::unique_ptr<TreeNode> buildTree(std::vector<Lexem>& lexems) {
     return std::move(stack.back());
 }
 
-double evaluate(const std::unique_ptr<TreeNode>& top, const std::map<std::string, FuncPtr>& functions) {
+double evaluate(const std::unique_ptr<TreeNode> top, const std::map<std::string, FuncPtr>& functions) {
     if (top->value.type == Type::NUM) {
         try {
             return stod(top->value.value);
@@ -66,13 +66,13 @@ double evaluate(const std::unique_ptr<TreeNode>& top, const std::map<std::string
         }
     }
     else if (top->value.type == Type::BIN_OPR) {
-        double left = evaluate(top->left, functions);
-        double right = evaluate(top->right, functions);
+        double left = evaluate(std::move(top->left), functions);
+        double right = evaluate(std::move(top->right), functions);
         std::vector<double> args = { left, right};
         return functions.at(top->value.value)(args);
     }
     else if (top->value.type == Type::UNA_OPR) {
-        std::vector<double> args = {evaluate(top->right, functions) };
+        std::vector<double> args = {evaluate(std::move(top->right), functions) };
         return functions.at(top->value.value)(args);
     }
 
